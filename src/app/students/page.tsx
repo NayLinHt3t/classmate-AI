@@ -77,9 +77,43 @@ const sampleStudents: (User & {
 ];
 
 export default function StudentsPage() {
-  const [students] = useState(sampleStudents);
+  const [students, setStudents] = useState(sampleStudents);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedGrade, setSelectedGrade] = useState("all");
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [newStudent, setNewStudent] = useState({
+    name: "",
+    email: "",
+    grade: "9th Grade",
+    gpa: 3.0,
+  });
+
+  const handleAddStudent = () => {
+    if (!newStudent.name || !newStudent.email) return;
+
+    const student = {
+      id: Date.now().toString(),
+      email: newStudent.email,
+      name: newStudent.name,
+      role: "student" as const,
+      institutionId: "inst-1",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      grade: newStudent.grade,
+      gpa: newStudent.gpa,
+      chatSessions: 0,
+      summariesGenerated: 0,
+    };
+
+    setStudents((prev) => [student, ...prev]);
+    setNewStudent({
+      name: "",
+      email: "",
+      grade: "9th Grade",
+      gpa: 3.0,
+    });
+    setShowAddForm(false);
+  };
 
   const filteredStudents = students.filter((student) => {
     const matchesSearch =
@@ -116,7 +150,7 @@ export default function StudentsPage() {
               Monitor student progress and platform engagement
             </p>
           </div>
-          <Button>
+          <Button onClick={() => setShowAddForm(true)}>
             <UserPlusIcon className="h-4 w-4 mr-2" />
             Add Student
           </Button>
@@ -188,6 +222,90 @@ export default function StudentsPage() {
             </CardContent>
           </Card>
         </div>
+
+        {/* Add Student Form */}
+        {showAddForm && (
+          <Card>
+            <CardHeader>
+              <CardTitle>Add New Student</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Full Name *
+                  </label>
+                  <Input
+                    value={newStudent.name}
+                    onChange={(e) =>
+                      setNewStudent({ ...newStudent, name: e.target.value })
+                    }
+                    placeholder="Enter student name..."
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Email Address *
+                  </label>
+                  <Input
+                    type="email"
+                    value={newStudent.email}
+                    onChange={(e) =>
+                      setNewStudent({ ...newStudent, email: e.target.value })
+                    }
+                    placeholder="student@school.edu"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Grade
+                  </label>
+                  <select
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    value={newStudent.grade}
+                    onChange={(e) =>
+                      setNewStudent({ ...newStudent, grade: e.target.value })
+                    }
+                  >
+                    <option value="9th Grade">9th Grade</option>
+                    <option value="10th Grade">10th Grade</option>
+                    <option value="11th Grade">11th Grade</option>
+                    <option value="12th Grade">12th Grade</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Initial GPA
+                  </label>
+                  <Input
+                    type="number"
+                    min="0"
+                    max="4"
+                    step="0.1"
+                    value={newStudent.gpa}
+                    onChange={(e) =>
+                      setNewStudent({
+                        ...newStudent,
+                        gpa: parseFloat(e.target.value),
+                      })
+                    }
+                    placeholder="3.0"
+                  />
+                </div>
+              </div>
+
+              <div className="flex gap-2">
+                <Button onClick={handleAddStudent}>Add Student</Button>
+                <Button variant="outline" onClick={() => setShowAddForm(false)}>
+                  Cancel
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Filters */}
         <Card>

@@ -90,9 +90,41 @@ const sampleTeachers: (User & {
 ];
 
 export default function TeachersPage() {
-  const [teachers] = useState(sampleTeachers);
+  const [teachers, setTeachers] = useState(sampleTeachers);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedDepartment, setSelectedDepartment] = useState("all");
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [newTeacher, setNewTeacher] = useState({
+    name: "",
+    email: "",
+    department: "Mathematics",
+  });
+
+  const handleAddTeacher = () => {
+    if (!newTeacher.name || !newTeacher.email) return;
+
+    const teacher = {
+      id: Date.now().toString(),
+      email: newTeacher.email,
+      name: newTeacher.name,
+      role: "teacher" as const,
+      institutionId: "inst-1",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      department: newTeacher.department,
+      summariesCreated: 0,
+      studentsHelped: 0,
+      activeReminders: 0,
+    };
+
+    setTeachers((prev) => [teacher, ...prev]);
+    setNewTeacher({
+      name: "",
+      email: "",
+      department: "Mathematics",
+    });
+    setShowAddForm(false);
+  };
 
   const filteredTeachers = teachers.filter((teacher) => {
     const matchesSearch =
@@ -132,7 +164,7 @@ export default function TeachersPage() {
               Monitor faculty engagement and platform usage
             </p>
           </div>
-          <Button>
+          <Button onClick={() => setShowAddForm(true)}>
             <UserPlusIcon className="h-4 w-4 mr-2" />
             Add Teacher
           </Button>
@@ -204,6 +236,75 @@ export default function TeachersPage() {
             </CardContent>
           </Card>
         </div>
+
+        {/* Add Teacher Form */}
+        {showAddForm && (
+          <Card>
+            <CardHeader>
+              <CardTitle>Add New Teacher</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Full Name *
+                  </label>
+                  <Input
+                    value={newTeacher.name}
+                    onChange={(e) =>
+                      setNewTeacher({ ...newTeacher, name: e.target.value })
+                    }
+                    placeholder="Enter teacher name..."
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Email Address *
+                  </label>
+                  <Input
+                    type="email"
+                    value={newTeacher.email}
+                    onChange={(e) =>
+                      setNewTeacher({ ...newTeacher, email: e.target.value })
+                    }
+                    placeholder="teacher@school.edu"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Department
+                </label>
+                <select
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  value={newTeacher.department}
+                  onChange={(e) =>
+                    setNewTeacher({ ...newTeacher, department: e.target.value })
+                  }
+                >
+                  <option value="Mathematics">Mathematics</option>
+                  <option value="Physics">Physics</option>
+                  <option value="Chemistry">Chemistry</option>
+                  <option value="Biology">Biology</option>
+                  <option value="English Literature">English Literature</option>
+                  <option value="History">History</option>
+                  <option value="Computer Science">Computer Science</option>
+                  <option value="Art">Art</option>
+                  <option value="Music">Music</option>
+                  <option value="Physical Education">Physical Education</option>
+                </select>
+              </div>
+
+              <div className="flex gap-2">
+                <Button onClick={handleAddTeacher}>Add Teacher</Button>
+                <Button variant="outline" onClick={() => setShowAddForm(false)}>
+                  Cancel
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Filters */}
         <Card>

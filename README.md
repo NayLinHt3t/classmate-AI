@@ -6,23 +6,25 @@ A comprehensive EdTech B2B solution that addresses teacher workload and student 
 
 ### Core Functionality
 
-- **AI Chatbot**: 24/7 student Q&A assistance with intelligent responses
+- **AI Chatbot**: 24/7 student Q&A assistance with intelligent responses powered by **FREE Hugging Face AI**
 - **Lecture Summary**: Automated summarization of educational content from various formats
 - **Smart Reminders**: Intelligent scheduling system for assignments, exams, and deadlines
 - **B2B Dashboard**: Comprehensive management for schools and universities
 
 ### Platform Capabilities
 
-- Real-time chat with AI assistance
+- Real-time chat with AI assistance using Mistral-7B model (FREE!)
 - File upload and processing (PDF, DOCX, TXT, MP3, MP4)
 - Student and teacher management
 - Performance analytics and insights
 - Responsive design for all devices
+- Automatic fallback to simulated responses if API key not configured
 
 ## 🛠 Tech Stack
 
 - **Frontend**: Next.js 15, React, TypeScript
 - **Styling**: Tailwind CSS
+- **AI Integration**: Hugging Face Inference API (Mistral-7B-Instruct-v0.2) - FREE!
 - **UI Components**: Custom components with Headless UI
 - **Icons**: Heroicons
 - **Development**: ESLint, TypeScript strict mode
@@ -53,6 +55,7 @@ src/
 
 - Node.js 18+
 - npm, yarn, pnpm, or bun
+- (Optional) Hugging Face API key for real AI responses - **100% FREE!**
 
 ### Installation
 
@@ -69,13 +72,51 @@ cd miniproject
 npm install
 ```
 
-3. Run the development server:
+3. **(Optional) Configure FREE AI Integration:**
+
+   The app works perfectly without this step using smart simulated responses, but real AI is even better!
+
+   a. Go to [Hugging Face](https://huggingface.co/settings/tokens) and create a FREE account
+
+   b. Generate a new API token (it's free, no credit card required!)
+
+   c. Copy `.env.local.example` to `.env.local`:
+
+   ```bash
+   cp .env.local.example .env.local
+   ```
+
+   d. Edit `.env.local` and add your API key:
+
+   ```
+   HUGGINGFACE_API_KEY=hf_your_actual_api_key_here
+   ```
+
+4. Run the development server:
 
 ```bash
 npm run dev
 ```
 
-4. Open [http://localhost:3000](http://localhost:3000) in your browser
+5. Open [http://localhost:3000](http://localhost:3000) in your browser
+
+### 🤖 AI Integration Details
+
+**Using Hugging Face (FREE!):**
+
+- Model: Mistral-7B-Instruct-v0.2 (powerful open-source LLM)
+- Cost: $0 - Completely free tier available
+- Setup time: 2 minutes
+- Benefits: Real AI understanding, contextual responses, natural conversation
+
+**Without API Key (Fallback Mode):**
+
+- Smart keyword-based responses
+- Educational topic recognition (math, science, writing, study tips)
+- Teacher-focused assistance (grading, lesson plans)
+- Still fully functional for demo and testing
+
+The system automatically detects if an API key is present and seamlessly switches between real AI and simulated responses. No code changes needed!
 
 ## 🔧 Development Commands
 
