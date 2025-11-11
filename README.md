@@ -100,6 +100,30 @@ npm run dev
 
 5. Open [http://localhost:3000](http://localhost:3000) in your browser
 
+### 🔐 Authentication
+
+The app includes a complete authentication system:
+
+**Login Page:** `/login`
+- Student and Teacher login options
+- Social login (Google, GitHub) UI ready
+- Demo credentials provided on the page
+
+**Demo Credentials:**
+- **Student:** `student@example.com` / `password123`
+- **Teacher:** `teacher@example.com` / `password123`
+
+**Features:**
+- User authentication with role selection (Student/Teacher)
+- Password visibility toggle
+- Remember me functionality
+- Forgot password flow
+- Sign up page with validation
+- Automatic redirect to login for unauthenticated users
+- User profile display with logout
+
+**Note:** This is a demo authentication system using localStorage. In production, implement proper server-side authentication with secure tokens.
+
 ### 🤖 AI Integration Details
 
 **Using Hugging Face (FREE!):**

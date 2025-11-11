@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   Bars3Icon,
   XMarkIcon,
@@ -12,6 +12,7 @@ import {
   ChartBarIcon,
   AcademicCapIcon,
   UserGroupIcon,
+  ArrowRightOnRectangleIcon,
 } from "@heroicons/react/24/outline";
 import { cn } from "@/lib/utils";
 
@@ -67,7 +68,38 @@ interface LayoutProps {
 
 export default function Layout({ children }: LayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [userName, setUserName] = useState("User");
+  const [userEmail, setUserEmail] = useState("");
   const pathname = usePathname();
+  const router = useRouter();
+
+  useEffect(() => {
+    // Get user info from localStorage
+    const storedName = localStorage.getItem("userName");
+    const storedEmail = localStorage.getItem("userEmail");
+    if (storedName) setUserName(storedName);
+    if (storedEmail) setUserEmail(storedEmail);
+  }, []);
+
+  const handleLogout = () => {
+    // Clear authentication
+    localStorage.removeItem("isAuthenticated");
+    localStorage.removeItem("userType");
+    localStorage.removeItem("userEmail");
+    localStorage.removeItem("userName");
+    
+    // Redirect to login
+    router.push("/login");
+  };
+
+  const getInitials = (name: string) => {
+    return name
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase()
+      .slice(0, 2);
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -185,13 +217,32 @@ export default function Layout({ children }: LayoutProps) {
             <div className="flex flex-1"></div>
             <div className="flex items-center gap-x-4 lg:gap-x-6">
               <div className="hidden lg:block lg:h-6 lg:w-px lg:bg-gray-200" />
-              <div className="flex items-center gap-x-4">
-                <span className="text-sm font-medium text-gray-700">
-                  Admin User
-                </span>
-                <div className="h-8 w-8 rounded-full bg-blue-500 flex items-center justify-center">
-                  <span className="text-sm font-medium text-white">A</span>
+              
+              {/* User Profile Section */}
+              <div className="flex items-center gap-x-3">
+                <div className="hidden sm:block text-right">
+                  <p className="text-sm font-medium text-gray-700">
+                    {userName}
+                  </p>
+                  {userEmail && (
+                    <p className="text-xs text-gray-500">{userEmail}</p>
+                  )}
                 </div>
+                <div className="h-8 w-8 rounded-full bg-gradient-to-br from-green-400 to-blue-500 flex items-center justify-center">
+                  <span className="text-sm font-medium text-white">
+                    {getInitials(userName)}
+                  </span>
+                </div>
+                
+                {/* Logout Button */}
+                <button
+                  onClick={handleLogout}
+                  className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                  title="Logout"
+                >
+                  <ArrowRightOnRectangleIcon className="h-5 w-5" />
+                  <span className="hidden md:inline">Logout</span>
+                </button>
               </div>
             </div>
           </div>
